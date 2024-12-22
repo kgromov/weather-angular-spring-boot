@@ -2,9 +2,9 @@ package org.kgromov.weather.archive;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRepositories;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
-@EnableReactiveMongoRepositories
+@EnableMongoRepositories
 @SpringBootApplication
 public class WeatherAngularSpringBootApplication {
 

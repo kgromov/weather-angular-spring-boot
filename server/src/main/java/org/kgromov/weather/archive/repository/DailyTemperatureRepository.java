@@ -4,19 +4,23 @@ import org.kgromov.weather.archive.model.*;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.Aggregation;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
-import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
 import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-public interface DailyTemperatureRepository extends ReactiveMongoRepository<DailyTemperature, String> {
-    Mono<DailyTemperature> findByDate(LocalDate date);
+import static java.util.stream.Collectors.groupingBy;
+
+public interface DailyTemperatureRepository extends MongoRepository<DailyTemperature, String> {
+    Optional<DailyTemperature> findByDate(LocalDate date);
 
     @Query("{'date': {$regex: ?0}}")
-    Flux<DailyTemperature> findByDateInRange(String monthDay, Pageable pageable);
+    List<DailyTemperature> findByDateInRange(String monthDay, Pageable pageable);
 
     @Aggregation(pipeline = {
             """
@@ -54,7 +58,7 @@ public interface DailyTemperatureRepository extends ReactiveMongoRepository<Dail
                 }*/
             """
     })
-    Flux<DailyTemperature> findByDateInRangeAggregation(String monthDay, Pageable pageable);
+    List<DailyTemperature> findByDateInRangeAggregation(String monthDay, Pageable pageable);
 
     @Aggregation(pipeline = {
             """
@@ -86,7 +90,7 @@ public interface DailyTemperatureRepository extends ReactiveMongoRepository<Dail
                 }
             """
     })
-    Mono<YearsRange> getYearsRange();
+    YearsRange getYearsRange();
 
     @Aggregation(pipeline = {
             """
@@ -146,7 +150,7 @@ public interface DailyTemperatureRepository extends ReactiveMongoRepository<Dail
                }
            """
     })
-    Flux<YearAverageTemperature> getYearAverageTemperature(Sort sort);
+    List<YearAverageTemperature> getYearAverageTemperature(Sort sort);
 
     @Aggregation(pipeline = {
             """
@@ -182,7 +186,7 @@ public interface DailyTemperatureRepository extends ReactiveMongoRepository<Dail
                 }
             """
     })
-    Mono<DayTemperature> getMinTemperature();
+    Optional<DayTemperature> getMinTemperature();
 
     @Aggregation(pipeline = {
             """
@@ -218,7 +222,7 @@ public interface DailyTemperatureRepository extends ReactiveMongoRepository<Dail
                 }
             """
     })
-    Mono<DayTemperature> getMaxTemperature();
+    Optional<DayTemperature> getMaxTemperature();
 
    @Aggregation(pipeline = {
            """
@@ -359,19 +363,23 @@ public interface DailyTemperatureRepository extends ReactiveMongoRepository<Dail
              }
            """
    })
-    Flux<SeasonTemperature> getSeasonsTemperature(Pageable pageable);
+    List<SeasonTemperature> getSeasonsTemperature(Pageable pageable);
 
-    default Flux<YearBySeasonTemperature> getYearsBySeasonsTemperature(Pageable pageable) {
-        return getSeasonsTemperature(pageable)
-                .groupBy(SeasonTemperature::getYear)
-                .flatMap(groupByYear -> {
-                 /*   Integer year = groupByYear.key();
-                    Mono<List<SeasonTemperature>> seasons = groupByYear.collectSortedList(Comparator.comparing(s -> s.getSeason().ordinal()));
-                    return Mono.from(seasons).map(s -> new YearBySeasonTemperature(year, s));*/
-                    return groupByYear.collectSortedList(Comparator.comparing(s -> s.getSeason().ordinal()))
-                            .map(seasons -> new YearBySeasonTemperature(groupByYear.key(), seasons));
+    default List<YearBySeasonTemperature> getYearsBySeasonsTemperature(Pageable pageable) {
+        return this.getSeasonsTemperature(pageable)
+                .stream()
+                .collect(groupingBy(SeasonTemperature::getYear))
+                .entrySet()
+                .stream()
+                .map(groupByYear -> {
+                    var seasons = groupByYear.getValue()
+                            .stream()
+                            .sorted(Comparator.comparing(s -> s.getSeason().ordinal()))
+                            .toList();
+                    return new YearBySeasonTemperature(groupByYear.getKey(), seasons);
                 })
-                .sort(Comparator.comparing(YearBySeasonTemperature::getYear));
+                .sorted(Comparator.comparing(YearBySeasonTemperature::getYear))
+                .toList();
     }
 
 

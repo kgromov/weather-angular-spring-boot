@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 @Configuration
-@EnableMongoRepositories
+@EnableMongoRepositories(basePackages = "org.kgromov.weather.archive.repository")
 public class MongoConfig  {
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(MongoConfig.class);
     private final MongoProperties mongoProperties;

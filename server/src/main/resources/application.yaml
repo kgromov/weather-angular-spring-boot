@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: weather-archive-server
+  data:
+    mongodb:
+      database: test
+      uri: mongodb://localhost:27017/${spring.data.mongodb.database}
+
+logging:
+  level:
+    org:
+      springframework:
+        data:
+          mongodb: debug
+
+server:
+  port: 8090

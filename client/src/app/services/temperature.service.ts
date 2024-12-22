@@ -9,32 +9,32 @@ import {SyncStatus} from "../model/weather-data";
   providedIn: 'root'
 })
 export class TemperatureService {
-  baseUrl = environment.baseUrl;
+  // baseUrl = environment.baseUrl;
 
   constructor(private http: HttpClient) {
   }
 
   public getYearSummary(years?: number): Observable<YearSummary[]> {
     const params = this.getYearsToShowParams(years);
-    return this.http.get<YearSummary[]>(`${this.baseUrl}/weather/summary`, {params: params});
+    return this.http.get<YearSummary[]>(`/api/weather/summary`, {params: params});
   }
 
   public getSeasonsTemperature(years?: number): Observable<YearBySeasonTemperature[]> {
     const params = this.getYearsToShowParams(years);
-    return this.http.get<YearBySeasonTemperature[]>(`${this.baseUrl}/weather/seasons`, {params: params});
+    return this.http.get<YearBySeasonTemperature[]>(`/api/weather/seasons`, {params: params});
   }
 
   public getMonthTemperature(years?: number): Observable<YearByMonthTemperature[]> {
     const params = this.getYearsToShowParams(years);
-    return this.http.get<YearByMonthTemperature[]>(`${this.baseUrl}/weather/months`, {params: params});
+    return this.http.get<YearByMonthTemperature[]>(`/api/weather/months`, {params: params});
   }
 
   public isSynced(): Observable<boolean> {
-    return this.http.get<boolean>(`${this.baseUrl}/isSynced`);
+    return this.http.get<boolean>(`/api/isSynced`);
   }
 
   public syncTemperature(): Observable<SyncStatus> {
-    return this.http.get<SyncStatus>(`${this.baseUrl}/sync`);
+    return this.http.get<SyncStatus>(`/api/sync`);
   }
 
   private getYearsToShowParams(years: number | undefined) {

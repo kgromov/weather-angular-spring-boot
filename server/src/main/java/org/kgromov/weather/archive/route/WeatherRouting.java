@@ -20,17 +20,17 @@ public class WeatherRouting {
     @Bean
     public RouterFunction<ServerResponse> weatherRoutes() {
         return route()
-                .GET("/weather/range", accept(APPLICATION_JSON), weatherRouteHandler::getYearsRange)
-                .GET("/weather/average", accept(APPLICATION_JSON), weatherRouteHandler::getYearAverageTemperature)
-                .GET("/weather/min", accept(APPLICATION_JSON), weatherRouteHandler::getMinTemperature)
-                .GET("/weather/max", accept(APPLICATION_JSON), weatherRouteHandler::getMaxTemperature)
-                .GET("/weather/seasonsInYear", accept(APPLICATION_JSON), weatherRouteHandler::getYearsBySeasonsTemperature)
-                .GET("/weather/seasons", accept(APPLICATION_JSON), weatherRouteHandler::getSeasonsTemperature)
+                .GET("/api/weather/range", accept(APPLICATION_JSON), weatherRouteHandler::getYearsRange)
+                .GET("/api/weather/average", accept(APPLICATION_JSON), weatherRouteHandler::getYearAverageTemperature)
+                .GET("/api/weather/min", accept(APPLICATION_JSON), weatherRouteHandler::getMinTemperature)
+                .GET("/api/weather/max", accept(APPLICATION_JSON), weatherRouteHandler::getMaxTemperature)
+                .GET("/api/weather/seasonsInYear", accept(APPLICATION_JSON), weatherRouteHandler::getYearsBySeasonsTemperature)
+                .GET("/api/weather/seasons", accept(APPLICATION_JSON), weatherRouteHandler::getSeasonsTemperature)
 
-                .GET("/weather/current", accept(APPLICATION_JSON), weatherRouteHandler::getCurrentTemperature)
-                .GET("/weather/single/{date}", accept(APPLICATION_JSON), weatherRouteHandler::getTemperatureForDate)
-                .GET("/weather/{date}", accept(APPLICATION_JSON), weatherRouteHandler::getTemperatureForDateInRange)
-                .GET("/weather/{date}", RequestPredicates.all()
+                .GET("/api/weather/current", accept(APPLICATION_JSON), weatherRouteHandler::getCurrentTemperature)
+                .GET("/api/weather/single/{date}", accept(APPLICATION_JSON), weatherRouteHandler::getTemperatureForDate)
+                .GET("/api/weather/{date}", accept(APPLICATION_JSON), weatherRouteHandler::getTemperatureForDateInRange)
+                .GET("/api/weather/{date}", RequestPredicates.all()
                                 .and(queryParam("years", v -> true))
                                 .and(accept(APPLICATION_JSON)),
                         weatherRouteHandler::getTemperatureForDateInRange

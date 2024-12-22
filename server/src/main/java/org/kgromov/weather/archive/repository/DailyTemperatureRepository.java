@@ -1,6 +1,6 @@
 package org.kgromov.weather.archive.repository;
 
-import com.weather_archieve.model.*;
+import org.kgromov.weather.archive.model.*;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.Aggregation;
@@ -11,7 +11,6 @@ import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
 import java.util.Comparator;
-import java.util.List;
 
 public interface DailyTemperatureRepository extends ReactiveMongoRepository<DailyTemperature, String> {
     Mono<DailyTemperature> findByDate(LocalDate date);

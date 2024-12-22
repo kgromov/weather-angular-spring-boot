@@ -1,9 +1,9 @@
 package org.kgromov.weather.archive.route;
 
-import com.weather_archieve.model.*;
-import com.weather_archieve.repository.DailyTemperatureRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.kgromov.weather.archive.model.*;
+import org.kgromov.weather.archive.repository.DailyTemperatureRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -25,7 +25,8 @@ public class WeatherRouteHandler {
     private final DailyTemperatureRepository temperatureRepository;
 
     public Mono<ServerResponse> getCurrentTemperature(ServerRequest request) {
-        Mono<DailyTemperature> temperature = temperatureRepository.findByDate(LocalDate.now());
+        Mono<DailyTemperature> temperature = temperatureRepository.findByDate(LocalDate.now().minusYears(2));
+        log.info("Getting temperature for date {}", LocalDate.now().minusYears(2));
         return ok()
                 .contentType(APPLICATION_JSON)
                 .body(temperature, DailyTemperature.class);

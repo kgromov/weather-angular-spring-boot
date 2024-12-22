@@ -5,6 +5,9 @@ spring:
     mongodb:
       database: test
       uri: mongodb://localhost:27017/${spring.data.mongodb.database}
+  webflux:
+    static-path-pattern: /assets/**
+    static-locations: "classpath:/assets/"
 
 logging:
   level:

@@ -1,0 +1,32 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light px-4 my-2">
+  <a class="navbar-brand" href="#">Weather in Odessa</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+          aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse nav-tabs justify-content-end" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      <a class="nav-link" routerLink="/daily"
+         [class.active]="dailyView" (click)="selectDailyView()">
+        Daily
+      </a>
+      <a class="nav-link" routerLink="/month"
+         [class.active]="monthView" (click)="selectMonthView()">
+        Months
+      </a>
+      <a class="nav-link" routerLink="/season"
+         [class.active]="seasonView" (click)="selectSeasonView()">
+        Seasons
+      </a>
+      <a class="nav-link" routerLink="/year"
+         [class.active]="yearView" (click)="selectYearView()">
+        Years
+      </a>
+    </div>
+  </div>
+</nav>
+<div class="container">
+  <router-outlet></router-outlet>
+</div>
+
+<footer class="text-center mt-5 mb-2-">Copyright © {{currentYear}} by kgromov</footer>
